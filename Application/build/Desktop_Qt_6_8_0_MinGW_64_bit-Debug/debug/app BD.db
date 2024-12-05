@@ -1,0 +1,151 @@
+-- Activer les clés étrangères
+PRAGMA foreign_keys = ON;
+
+-- Table Client
+CREATE TABLE IF NOT EXISTS Client (
+  id_Client INTEGER PRIMARY KEY AUTOINCREMENT,
+  nom TEXT NOT NULL,
+  email TEXT NOT NULL,
+  telephone TEXT NOT NULL,
+  type_Client TEXT CHECK(type_Client IN ('pressé', 'détendu')) NOT NULL
+);
+
+-- Table Tables_Restaurant
+CREATE TABLE IF NOT EXISTS Tables_Restaurant (
+  id_Table INTEGER PRIMARY KEY AUTOINCREMENT,
+  num_Table INTEGER NOT NULL,
+  capacité INTEGER NOT NULL,
+  carré TEXT NOT NULL
+);
+
+-- Table Commandes
+CREATE TABLE IF NOT EXISTS Commandes (
+  id_Commande INTEGER PRIMARY KEY AUTOINCREMENT,
+  date_Commande TEXT NOT NULL,
+  id_Table INTEGER NOT NULL,
+  id_Client INTEGER NOT NULL,
+  FOREIGN KEY (id_Table) REFERENCES Tables_Restaurant (id_Table),
+  FOREIGN KEY (id_Client) REFERENCES Client (id_Client)
+);
+
+-- Table Plats
+CREATE TABLE IF NOT EXISTS Plats (
+  id_Plat INTEGER PRIMARY KEY AUTOINCREMENT,
+  nom_Plat TEXT NOT NULL,
+  Prix REAL NOT NULL,
+  temps_Préparation INTEGER NOT NULL
+);
+
+-- Table Commande_Plats
+CREATE TABLE IF NOT EXISTS Commande_Plats (
+  id_Commande INTEGER NOT NULL,
+  id_Plat INTEGER NOT NULL,
+  quantité INTEGER NOT NULL,
+  PRIMARY KEY (id_Commande, id_Plat),
+  FOREIGN KEY (id_Commande) REFERENCES Commandes (id_Commande),
+  FOREIGN KEY (id_Plat) REFERENCES Plats (id_Plat)
+);
+
+-- Table Employés
+CREATE TABLE IF NOT EXISTS Employés (
+  id_employé INTEGER PRIMARY KEY AUTOINCREMENT,
+  nom TEXT NOT NULL,
+  Poste TEXT NOT NULL,
+  horaire_début TEXT NOT NULL,
+  horaire_fin TEXT NOT NULL
+);
+
+-- Table Stocks
+CREATE TABLE IF NOT EXISTS Stocks (
+  id_Produit INTEGER PRIMARY KEY AUTOINCREMENT,
+  nom_Produit TEXT NOT NULL,
+  quantité INTEGER NOT NULL,
+  date_expiration TEXT NOT NULL,
+  type_Produit TEXT CHECK(type_Produit IN ('surgelé', 'frais', 'longue conservation')) NOT NULL
+);
+
+-- Table Matériel
+CREATE TABLE IF NOT EXISTS Matériel (
+  id_Matériel INTEGER PRIMARY KEY AUTOINCREMENT,
+  type_matériel TEXT NOT NULL,
+  quantité INTEGER NOT NULL
+);
+
+-- Table Réservations
+CREATE TABLE IF NOT EXISTS Réservations (
+  id_Réservation INTEGER PRIMARY KEY AUTOINCREMENT,
+  id_Client INTEGER NOT NULL,
+  id_Table INTEGER NOT NULL,
+  date_Réservation TEXT NOT NULL,
+  FOREIGN KEY (id_Client) REFERENCES Client (id_Client),
+  FOREIGN KEY (id_Table) REFERENCES Tables_Restaurant (id_Table)
+);
+
+-- Table Commande_Employé
+CREATE TABLE IF NOT EXISTS Commande_Employé (
+  id_Commande INTEGER NOT NULL,
+  id_Employé INTEGER NOT NULL,
+  PRIMARY KEY (id_Commande, id_Employé),
+  FOREIGN KEY (id_Commande) REFERENCES Commandes (id_Commande),
+  FOREIGN KEY (id_Employé) REFERENCES Employés (id_employé)
+);
+
+-- Table Plats_Stocks
+CREATE TABLE IF NOT EXISTS Plats_Stocks (
+  id_Plat INTEGER NOT NULL,
+  id_Produit INTEGER NOT NULL,
+  quantité_Produit INTEGER NOT NULL,
+  PRIMARY KEY (id_Plat, id_Produit),
+  FOREIGN KEY (id_Plat) REFERENCES Plats (id_Plat),
+  FOREIGN KEY (id_Produit) REFERENCES Stocks (id_Produit)
+);
+
+-- Table Commandes_Matériels
+CREATE TABLE IF NOT EXISTS Commandes_Matériels (
+  id_Matériel INTEGER NOT NULL,
+  id_Commande INTEGER NOT NULL,
+  Quantité_utilisée INTEGER NOT NULL,
+  PRIMARY KEY (id_Matériel, id_Commande),
+  FOREIGN KEY (id_Commande) REFERENCES Commandes (id_Commande),
+  FOREIGN KEY (id_Matériel) REFERENCES Matériel (id_Matériel)
+);
+
+-- Insertion des données
+INSERT INTO Client (nom, email, telephone, type_Client) 
+VALUES 
+('Jean Dupont', 'jean.dupont@example.com', '690123456', 'pressé'),
+('Marie Curie', 'marie.curie@example.com', '691234567', 'détendu');
+
+INSERT INTO Tables_Restaurant (num_Table, capacité, carré) 
+VALUES 
+(1, 4, 'Carré A'),
+(2, 2, 'Carré B'),
+(3, 6, 'Carré A');
+
+INSERT INTO Commandes (date_Commande, id_Table, id_Client) 
+VALUES 
+('2024-11-30 12:30:00', 1, 1),
+('2024-11-30 13:00:00', 2, 2);
+
+INSERT INTO Plats (nom_Plat, Prix, temps_Préparation) 
+VALUES 
+('Pizza Margherita', 12.50, 15),
+('Spaghetti Carbonara', 15.00, 20),
+('Tiramisu', 8.00, 10);
+
+INSERT INTO Employés (nom, Poste, horaire_début, horaire_fin) 
+VALUES 
+('Alice Martin', 'Serveur', '10:00:00', '17:00:00'),
+('Bob Durant', 'Cuisinier', '17:00:00', '24:00:00');
+
+INSERT INTO Stocks (nom_Produit, quantité, date_expiration, type_Produit) 
+VALUES 
+('Tomates', 50, '2024-12-15', 'frais'),
+('Mozzarella', 30, '2024-12-10', 'surgelé'),
+('Pâtes', 100, '2025-06-01', 'longue conservation');
+
+INSERT INTO Matériel (type_matériel, quantité) 
+VALUES 
+('Assiettes', 50),
+('Verres', 40),
+('Couverts', 60);

@@ -1,0 +1,156 @@
+-- MySQL Workbench Forward Engineering
+
+SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0;
+SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0;
+SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION';
+
+-- -----------------------------------------------------
+-- Schema Ma_BD
+-- -----------------------------------------------------
+CREATE SCHEMA IF NOT EXISTS `Ma_BD` DEFAULT CHARACTER SET utf8 ;
+USE `Ma_BD` ;
+
+-- -----------------------------------------------------
+-- Table `Ma_BD`.`Client`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `Ma_BD`.`Client` (
+  `id_Client` INT NOT NULL AUTO_INCREMENT,
+  `nom` VARCHAR(100) NOT NULL,
+  `email` VARCHAR(100) NOT NULL,
+  `telephone` VARCHAR(15) NOT NULL,
+  `type_Client` ENUM('pressé', 'détendu') NOT NULL,
+  PRIMARY KEY (`id_Client`)
+) ENGINE = InnoDB;
+
+-- -----------------------------------------------------
+-- Table `Ma_BD`.`Tables_Restaurant`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `Ma_BD`.`Tables_Restaurant` (
+  `id_Table` INT NOT NULL AUTO_INCREMENT,
+  `num_Table` INT NOT NULL,
+  `capacité` INT NOT NULL,
+  `carré` VARCHAR(50) NOT NULL,
+  PRIMARY KEY (`id_Table`)
+) ENGINE = InnoDB;
+
+-- -----------------------------------------------------
+-- Table `Ma_BD`.`Commandes`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `Ma_BD`.`Commandes` (
+  `id_Commande` INT NOT NULL AUTO_INCREMENT,
+  `date_Commande` DATETIME NOT NULL,
+  `id_Table` INT NOT NULL,
+  `id_Client` INT NOT NULL,
+  PRIMARY KEY (`id_Commande`),
+  FOREIGN KEY (`id_Table`) REFERENCES `Ma_BD`.`Tables_Restaurant` (`id_Table`),
+  FOREIGN KEY (`id_Client`) REFERENCES `Ma_BD`.`Client` (`id_Client`)
+) ENGINE = InnoDB;
+
+-- -----------------------------------------------------
+-- Table `Ma_BD`.`Plats`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `Ma_BD`.`Plats` (
+  `id_Plat` INT NOT NULL AUTO_INCREMENT,
+  `nom_Plat` VARCHAR(100) NOT NULL,
+  `Prix` DECIMAL(10,2) NOT NULL,
+  `temps_Préparation` INT NOT NULL,
+  PRIMARY KEY (`id_Plat`)
+) ENGINE = InnoDB;
+
+-- -----------------------------------------------------
+-- Table `Ma_BD`.`Commande_Plats`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `Ma_BD`.`Commande_Plats` (
+  `id_Commande` INT NOT NULL,
+  `id_Plat` INT NOT NULL,
+  `quantité` INT NOT NULL,
+  PRIMARY KEY (`id_Commande`, `id_Plat`),
+  FOREIGN KEY (`id_Commande`) REFERENCES `Ma_BD`.`Commandes` (`id_Commande`),
+  FOREIGN KEY (`id_Plat`) REFERENCES `Ma_BD`.`Plats` (`id_Plat`)
+) ENGINE = InnoDB;
+
+-- -----------------------------------------------------
+-- Table `Ma_BD`.`Employés`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `Ma_BD`.`Employés` (
+  `id_employé` INT NOT NULL AUTO_INCREMENT,
+  `nom` VARCHAR(100) NOT NULL,
+  `Poste` VARCHAR(50) NOT NULL,
+  `horaire_début` TIME NOT NULL,
+  `horaire_fin` TIME NOT NULL,
+  PRIMARY KEY (`id_employé`)
+) ENGINE = InnoDB;
+
+-- -----------------------------------------------------
+-- Table `Ma_BD`.`Stocks`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `Ma_BD`.`Stocks` (
+  `id_Produit` INT NOT NULL AUTO_INCREMENT,
+  `nom_Produit` VARCHAR(100) NOT NULL,
+  `quantité` INT NOT NULL,
+  `date_expiration` DATE NOT NULL,
+  `type_Produit` ENUM('surgelé', 'frais', 'longue conservation') NOT NULL,
+  PRIMARY KEY (`id_Produit`)
+) ENGINE = InnoDB;
+
+-- -----------------------------------------------------
+-- Table `Ma_BD`.`Matériel`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `Ma_BD`.`Matériel` (
+  `id_Matériel` INT NOT NULL AUTO_INCREMENT,
+  `type_matériel` VARCHAR(100) NOT NULL,
+  `quantité` INT NOT NULL,
+  PRIMARY KEY (`id_Matériel`)
+) ENGINE = InnoDB;
+
+-- -----------------------------------------------------
+-- Table `Ma_BD`.`Réservations`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `Ma_BD`.`Réservations` (
+  `id_Réservation` INT NOT NULL AUTO_INCREMENT,
+  `id_Client` INT NOT NULL,
+  `id_Table` INT NOT NULL,
+  `date_Réservation` DATETIME NOT NULL,
+  PRIMARY KEY (`id_Réservation`),
+  FOREIGN KEY (`id_Client`) REFERENCES `Ma_BD`.`Client` (`id_Client`),
+  FOREIGN KEY (`id_Table`) REFERENCES `Ma_BD`.`Tables_Restaurant` (`id_Table`)
+) ENGINE = InnoDB;
+
+-- -----------------------------------------------------
+-- Table `Ma_BD`.`Commande_Employé`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `Ma_BD`.`Commande_Employé` (
+  `id_Commande` INT NOT NULL,
+  `id_Employé` INT NOT NULL,
+  PRIMARY KEY (`id_Commande`, `id_Employé`),
+  FOREIGN KEY (`id_Commande`) REFERENCES `Ma_BD`.`Commandes` (`id_Commande`),
+  FOREIGN KEY (`id_Employé`) REFERENCES `Ma_BD`.`Employés` (`id_employé`)
+) ENGINE = InnoDB;
+
+-- -----------------------------------------------------
+-- Table `Ma_BD`.`Plats_Stocks`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `Ma_BD`.`Plats_Stocks` (
+  `id_Plat` INT NOT NULL,
+  `id_Produit` INT NOT NULL,
+  `quantité_Produit` INT NOT NULL,
+  PRIMARY KEY (`id_Plat`, `id_Produit`),
+  FOREIGN KEY (`id_Plat`) REFERENCES `Ma_BD`.`Plats` (`id_Plat`),
+  FOREIGN KEY (`id_Produit`) REFERENCES `Ma_BD`.`Stocks` (`id_Produit`)
+) ENGINE = InnoDB;
+
+-- -----------------------------------------------------
+-- Table `Ma_BD`.`Commandes_Matériels`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `Ma_BD`.`Commandes_Matériels` (
+  `id_Matériel` INT NOT NULL,
+  `id_Commande` INT NOT NULL,
+  `Quantité_utilisée` INT NOT NULL,
+  PRIMARY KEY (`id_Matériel`, `id_Commande`),
+  FOREIGN KEY (`id_Commande`) REFERENCES `Ma_BD`.`Commandes` (`id_Commande`),
+  FOREIGN KEY (`id_Matériel`) REFERENCES `Ma_BD`.`Matériel` (`id_Matériel`)
+) ENGINE = InnoDB;
+
+SET SQL_MODE=@OLD_SQL_MODE;
+SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS;
+SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS;
