@@ -2,21 +2,20 @@
 #define TABLECONTROLLER_H
 
 #include <QObject>
-#include <QLabel>
-#include <QList>
+#include <QGraphicsScene>
+#include <QGraphicsPixmapItem>
 
-class TableController : public QObject
-{
+class TableController : public QObject {
     Q_OBJECT
 
 public:
-    explicit TableController(QWidget *parent = nullptr);
+    explicit TableController(QObject *parent = nullptr);
+    void setScene(QGraphicsScene *scene); // Définir la scène
     void addTable(const QString &imagePath, int x, int y); // Ajouter une table
-    void removeTables(); // Optionnel : pour supprimer les tables existantes
 
 private:
-    QList<QLabel*> tables;  // Liste des QLabel (tables)
-    QWidget *parentWidget;  // Widget parent (RestaurantFrame)
+    QGraphicsScene *scene;
+    QList<QGraphicsPixmapItem *> tables;
 };
 
 #endif // TABLECONTROLLER_H

@@ -7,6 +7,7 @@
 #include <QLabel>
 #include <QTimer>
 #include "TableController.h"
+#include "StaffController.h"
 
 namespace Ui {
 class MainWindow;
@@ -29,6 +30,7 @@ private:
     QList<QLabel *> staffLabels; // Liste pour gérer les personnages
     QTimer *simulationTimer; // Timer pour animer les personnages
     TableController *tableController;
+    StaffController *staffController;
 
     void setupTables();
     void connectToDatabase();
