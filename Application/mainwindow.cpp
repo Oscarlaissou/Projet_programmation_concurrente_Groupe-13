@@ -5,6 +5,7 @@
 #include <QRandomGenerator>
 #include <QGraphicsPixmapItem>
 
+#include "viewwindow.h"
 #include "StaffController.h"
 #include "TableController.h"
 #include "TableController.cpp"
@@ -16,6 +17,7 @@ MainWindow::MainWindow(QWidget *parent)
     , simulationTimer(new QTimer(this))
     , timer(new QTimer(this)) // Initialisation du timer pour le chronomètre
     , elapsedSeconds(0)       // Initialisation du compteur de secondes
+    , viewWindow(new ViewWindow(this))
     , tableController(new TableController())
     , staffController(new StaffController())
 {
@@ -43,6 +45,10 @@ MainWindow::MainWindow(QWidget *parent)
     connect(ui->pauseButton, &QPushButton::clicked, this, &MainWindow::onPauseButtonClicked);
     connect(ui->stopButton, &QPushButton::clicked, this, &MainWindow::onStopButtonClicked);
 
+    // Connectez le bouton Dashboard au slot
+    connect(ui->dashboardButton, &QPushButton::clicked, this, &MainWindow::onDashboardButtonClicked);
+
+
     // Connectez le timer à la mise à jour de l'affichage
     connect(timer, &QTimer::timeout, this, &MainWindow::updateTimeDisplay);
 }
@@ -55,7 +61,8 @@ MainWindow::~MainWindow()
     delete ui;
     delete tableController;
     delete staffController;
-    delete timer; // Supprimez le timer pour éviter les fuites mémoire
+    delete timer;
+    delete viewWindow;
 }
 
 // Mise à jour de l'affichage du temps
@@ -72,6 +79,8 @@ void MainWindow::onStartButtonClicked()
 {
     qDebug() << "Bouton Démarrer cliqué.";
     timer->start(1000); // Démarre le timer pour mises à jour toutes les 1000ms (1 seconde)
+
+    start_simulation();
 }
 
 // Slot pour le bouton Pause
@@ -122,9 +131,28 @@ void MainWindow::setupTables()
     qDebug() << "Tables configurées avec des ajouts spécifiques.";
 }
 
+void MainWindow::onDashboardButtonClicked()
+{
+    if (viewWindow) {
+        viewWindow->show(); // Afficher la fenêtre du tableau de bord
+    } else {
+        qDebug() << "Erreur : ViewWindow n'a pas été initialisée.";
+    }
+}
+
+
 // Simulation du mouvement des personnages
 void MainWindow::start_simulation()
 {
+    // Ajouter 5 personnages avec des positions initiales aléatoires
+    for (int i = 0; i < 5; ++i) {
+        int x = QRandomGenerator::global()->bounded(0, ui->RestaurantGraphicsView->width() - 50);
+        int y = QRandomGenerator::global()->bounded(0, ui->RestaurantGraphicsView->height() - 50);
+        staffController->addStaff(":build/Desktop_Qt_6_8_0_MinGW_64_bit-Debug/debug/images/Personnage.png", i, x, y, 0.5); // Échelle à 50%
+        qDebug() << "Nombre d'éléments dans la scène : " << ui->RestaurantGraphicsView->scene()->items().count();
+
+
+    }
     connect(simulationTimer, &QTimer::timeout, this, [this]() {
         for (int i = 0; i < 5; ++i) {
             int dx = QRandomGenerator::global()->bounded(-10, 10); // Déplacement horizontal aléatoire

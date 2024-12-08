@@ -17,17 +17,20 @@ SOURCES += \
     Table.cpp \
     TableController.cpp \
     main.cpp \
-    mainwindow.cpp
+    mainwindow.cpp \
+    viewwindow.cpp
 
 HEADERS += \
     Staff.h \
     StaffController.h \
     Table.h \
     TableController.h \
-    mainwindow.h
+    mainwindow.h \
+    viewwindow.h
 
 FORMS += \
-    mainwindow.ui
+    mainwindow.ui \
+    viewwindow.ui
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin

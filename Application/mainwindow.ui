@@ -132,6 +132,23 @@ border-radius: 10px;</string>
       <string>Arrêter</string>
      </property>
     </widget>
+    <widget class="QPushButton" name="dashboardButton">
+     <property name="geometry">
+      <rect>
+       <x>530</x>
+       <y>0</y>
+       <width>131</width>
+       <height>24</height>
+      </rect>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">border: 1px solid black;
+</string>
+     </property>
+     <property name="text">
+      <string>Ouvrir le dashboard</string>
+     </property>
+    </widget>
    </widget>
   </widget>
   <widget class="QMenuBar" name="menubar">

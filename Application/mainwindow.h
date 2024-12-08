@@ -7,6 +7,8 @@
 #include <QLabel>
 #include <QTimer>
 #include <QTime>
+
+#include "viewwindow.h"
 #include "TableController.h"
 #include "StaffController.h"
 
@@ -27,6 +29,7 @@ private slots:
     void onPauseButtonClicked();       // Bouton Pause
     void onStopButtonClicked();        // Bouton Stop
     void updateTimeDisplay();          // Mise à jour de l'affichage du temps
+    void onDashboardButtonClicked();   // Bouton Dashboard (nouveau slot)
 
 private:
     Ui::MainWindow *ui;
@@ -36,6 +39,7 @@ private:
     QTimer *simulationTimer;           // Chronomètre pour la simulation
     TableController *tableController;
     StaffController *staffController;
+    ViewWindow *viewWindow;            // Pointeur vers ViewWindow
 
     // Gestion du temps pour le chronomètre
     QTimer *timer;                     // Timer pour le suivi du temps
