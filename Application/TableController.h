@@ -10,8 +10,9 @@ class TableController : public QObject {
 
 public:
     explicit TableController(QObject *parent = nullptr);
-    void setScene(QGraphicsScene *scene); // Définir la scène
-    void addTable(const QString &imagePath, int x, int y); // Ajouter une table
+    void setScene(QGraphicsScene *scene);
+    void setupTables(); // Nouvelle méthode pour organiser les tables
+    void addTable(const QString &imagePath, int x, int y, int width, int height);
 
 private:
     QGraphicsScene *scene;

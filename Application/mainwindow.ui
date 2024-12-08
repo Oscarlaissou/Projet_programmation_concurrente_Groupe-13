@@ -38,7 +38,7 @@
     <property name="frameShadow">
      <enum>QFrame::Shadow::Raised</enum>
     </property>
-    <widget class="QPushButton" name="Start">
+    <widget class="QPushButton" name="startButton">
      <property name="geometry">
       <rect>
        <x>10</x>
@@ -56,7 +56,7 @@ border-radius: 10px;</string>
       <string>Démarrer</string>
      </property>
     </widget>
-    <widget class="QPushButton" name="Pause">
+    <widget class="QPushButton" name="pauseButton">
      <property name="geometry">
       <rect>
        <x>100</x>
@@ -74,7 +74,7 @@ border-radius: 10px;</string>
       <string>Pause</string>
      </property>
     </widget>
-    <widget class="QTimeEdit" name="timeEdit">
+    <widget class="QTimeEdit" name="timeEditer">
      <property name="geometry">
       <rect>
        <x>1390</x>
@@ -102,9 +102,9 @@ border-radius: 7px;</string>
     <widget class="QGraphicsView" name="RestaurantGraphicsView">
      <property name="geometry">
       <rect>
-       <x>195</x>
+       <x>5</x>
        <y>51</y>
-       <width>681</width>
+       <width>871</width>
        <height>741</height>
       </rect>
      </property>
@@ -114,7 +114,7 @@ background-image: url(:/build/Desktop_Qt_6_8_0_MinGW_64_bit-Debug/debug/images/p
 border-radius: 7px;</string>
      </property>
     </widget>
-    <widget class="QPushButton" name="pushButton">
+    <widget class="QPushButton" name="stopButton">
      <property name="geometry">
       <rect>
        <x>190</x>
@@ -140,12 +140,14 @@ border-radius: 10px;</string>
      <x>0</x>
      <y>0</y>
      <width>1539</width>
-     <height>25</height>
+     <height>22</height>
     </rect>
    </property>
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
  </widget>
- <resources/>
+ <resources>
+  <include location="parquet.qrc"/>
+ </resources>
  <connections/>
 </ui>

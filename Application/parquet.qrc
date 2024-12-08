@@ -1,5 +1,13 @@
 <RCC>
   <qresource>
+    <file>build/Desktop_Qt_6_8_0_MinGW_64_bit-Debug/debug/images/comptoir.png</file>
+    <file>build/Desktop_Qt_6_8_0_MinGW_64_bit-Debug/debug/images/table4(3).png</file>
+    <file>build/Desktop_Qt_6_8_0_MinGW_64_bit-Debug/debug/images/table4(2).png</file>
+    <file>build/Desktop_Qt_6_8_0_MinGW_64_bit-Debug/debug/images/table8.png</file>
+    <file>build/Desktop_Qt_6_8_0_MinGW_64_bit-Debug/debug/images/table6.png</file>
+    <file>build/Desktop_Qt_6_8_0_MinGW_64_bit-Debug/debug/images/table4.png</file>
+    <file>build/Desktop_Qt_6_8_0_MinGW_64_bit-Debug/debug/images/table2.png</file>
+    <file>build/Desktop_Qt_6_8_0_MinGW_64_bit-Debug/debug/images/table10.png</file>
     <file>build/Desktop_Qt_6_8_0_MinGW_64_bit-Debug/debug/images/carreau.jpg</file>
     <file>build/Desktop_Qt_6_8_0_MinGW_64_bit-Debug/debug/images/table-ronde.png</file>
     <file>build/Desktop_Qt_6_8_0_MinGW_64_bit-Debug/debug/images/table.png</file>

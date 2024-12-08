@@ -7,14 +7,15 @@
 
 #include "StaffController.h"
 #include "TableController.h"
-#include "StaffController.cpp"
 #include "TableController.cpp"
-
+#include "StaffController.cpp"
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
     , ui(new Ui::MainWindow)
     , simulationTimer(new QTimer(this))
+    , timer(new QTimer(this)) // Initialisation du timer pour le chronomètre
+    , elapsedSeconds(0)       // Initialisation du compteur de secondes
     , tableController(new TableController())
     , staffController(new StaffController())
 {
@@ -34,8 +35,16 @@ MainWindow::MainWindow(QWidget *parent)
     // Configuration des tables
     setupTables();
 
-    // Connecter le bouton "Start" à la simulation
-    connect(ui->Start, &QPushButton::clicked, this, &MainWindow::start_simulation);
+    // Configurer l'affichage du QTimeEdit
+    ui->timeEditer->setDisplayFormat("mm:ss");
+
+    // Connectez les boutons du chronomètre aux slots
+    connect(ui->startButton, &QPushButton::clicked, this, &MainWindow::onStartButtonClicked);
+    connect(ui->pauseButton, &QPushButton::clicked, this, &MainWindow::onPauseButtonClicked);
+    connect(ui->stopButton, &QPushButton::clicked, this, &MainWindow::onStopButtonClicked);
+
+    // Connectez le timer à la mise à jour de l'affichage
+    connect(timer, &QTimer::timeout, this, &MainWindow::updateTimeDisplay);
 }
 
 MainWindow::~MainWindow()
@@ -44,8 +53,46 @@ MainWindow::~MainWindow()
         db.close();
     }
     delete ui;
+    delete tableController;
+    delete staffController;
+    delete timer; // Supprimez le timer pour éviter les fuites mémoire
 }
 
+// Mise à jour de l'affichage du temps
+void MainWindow::updateTimeDisplay()
+{
+    elapsedSeconds++;
+    QTime time(0, 0, 0); // Temps de départ (00:00:00)
+    time = time.addSecs(elapsedSeconds); // Ajoute le temps écoulé
+    ui->timeEditer->setTime(time); // Met à jour le QTimeEdit
+}
+
+// Slot pour le bouton Démarrer
+void MainWindow::onStartButtonClicked()
+{
+    qDebug() << "Bouton Démarrer cliqué.";
+    timer->start(1000); // Démarre le timer pour mises à jour toutes les 1000ms (1 seconde)
+}
+
+// Slot pour le bouton Pause
+void MainWindow::onPauseButtonClicked()
+{
+    qDebug() << "Bouton Pause cliqué.";
+    timer->stop(); // Arrête temporairement le timer
+}
+
+// Slot pour le bouton Stopper
+void MainWindow::onStopButtonClicked()
+{
+    qDebug() << "Bouton Stopper cliqué.";
+    timer->stop();             // Arrête le timer
+    elapsedSeconds = 0;        // Réinitialise le temps écoulé
+
+    QTime time(0, 0, 0);       // Réinitialise l'heure à 00:00:00
+    ui->timeEditer->setTime(time); // Met à jour l'affichage dans QTimeEdit
+}
+
+// Connexion à la base de données
 void MainWindow::connectToDatabase()
 {
     db = QSqlDatabase::addDatabase("QSQLITE");
@@ -58,28 +105,27 @@ void MainWindow::connectToDatabase()
     }
 }
 
+// Configuration des tables
 void MainWindow::setupTables()
 {
-    // Ajouter des tables statiques via le TableController
-    //tableController->addTable(":build/Desktop_Qt_6_8_0_MinGW_64_bit-Debug/debug/images/table-ronde.png", 50, 50);
-   // tableController->addTable(":build/Desktop_Qt_6_8_0_MinGW_64_bit-Debug/debug/images/table-ronde.png", 200, 100);
-   // tableController->addTable(":build/Desktop_Qt_6_8_0_MinGW_64_bit-Debug/debug/images/table-ronde.png", 350, 200);
-   // tableController->addTable(":build/Desktop_Qt_6_8_0_MinGW_64_bit-Debug/debug/images/table-ronde.png", 500, 300);
-
-   // qDebug() << "Tables configurées et affichées sur l'interface.";
-}
-
-void MainWindow::start_simulation()
-{
-    // Ajouter 5 personnages avec des positions initiales aléatoires
-    for (int i = 0; i < 5; ++i) {
-        int x = QRandomGenerator::global()->bounded(0, ui->RestaurantGraphicsView->width() - 50);
-        int y = QRandomGenerator::global()->bounded(0, ui->RestaurantGraphicsView->height() - 50);
-        staffController->addStaff(":build/Desktop_Qt_6_8_0_MinGW_64_bit-Debug/debug/images/Personnage.png", i, x, y, 0.5); // Échelle à 50%
+    if (!tableController) {
+        qWarning() << "Erreur : TableController n'est pas initialisé.";
+        return;
     }
 
-    // Connecter le timer pour animer les personnages
-    connect(simulationTimer, &QTimer::timeout, this, [=]() {
+    // Organiser les tables avec la logique principale
+    tableController->setupTables();
+
+    // Ajouter des tables spécifiques manuellement
+    tableController->addTable(":build/Desktop_Qt_6_8_0_MinGW_64_bit-Debug/debug/images/comptoir.png", 70, 60, 120, 120);
+
+    qDebug() << "Tables configurées avec des ajouts spécifiques.";
+}
+
+// Simulation du mouvement des personnages
+void MainWindow::start_simulation()
+{
+    connect(simulationTimer, &QTimer::timeout, this, [this]() {
         for (int i = 0; i < 5; ++i) {
             int dx = QRandomGenerator::global()->bounded(-10, 10); // Déplacement horizontal aléatoire
             int dy = QRandomGenerator::global()->bounded(-10, 10); // Déplacement vertical aléatoire
@@ -87,6 +133,6 @@ void MainWindow::start_simulation()
         }
     });
 
-    simulationTimer->start(100); // Mise à jour toutes les 100 ms
+    simulationTimer->start(100); // Mise à jour toutes les 100ms
     qDebug() << "Simulation démarrée.";
 }
