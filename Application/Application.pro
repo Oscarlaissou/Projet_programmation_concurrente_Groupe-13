@@ -18,7 +18,6 @@ SOURCES += \
     TableController.cpp \
     main.cpp \
     mainwindow.cpp \
-    viewwindow.cpp \
     viewwindow.cpp
 
 HEADERS += \
@@ -27,8 +26,8 @@ HEADERS += \
     Table.h \
     TableController.h \
     mainwindow.h \
-    viewwindow.h \
     viewwindow.h
+
 
 FORMS += \
     mainwindow.ui \

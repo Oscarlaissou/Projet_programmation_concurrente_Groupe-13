@@ -105,7 +105,7 @@ void MainWindow::onStopButtonClicked()
 void MainWindow::connectToDatabase()
 {
     db = QSqlDatabase::addDatabase("QSQLITE");
-    db.setDatabaseName("app BD.db");
+    db.setDatabaseName("database.db");
 
     if (!db.open()) {
         qDebug() << "Erreur lors de la connexion à la base de données :" << db.lastError().text();
