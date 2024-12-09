@@ -62,16 +62,6 @@ void TableController::setupTables() {
             }
             currentY += spaceY;
         }
-
-        // Une rangée de quatre tables au centre
-        // currentX = startX + square * squareOffsetX + spaceX;
-        // for (int col = 0; col < 4; ++col) {
-        //     QString tableType = getNextTableType();
-        //     if (!tableType.isEmpty()) {
-        //         addTable(tableType, currentX + col * spaceX, currentY, tableSize.width(), tableSize.height());
-        //     }
-        // }
-        // currentY += spaceY;
     }
 
     // Ajuste la scène pour inclure toutes les tables
