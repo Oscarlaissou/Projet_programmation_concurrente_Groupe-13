@@ -16,6 +16,7 @@ SOURCES += \
     StaffController.cpp \
     Table.cpp \
     TableController.cpp \
+    kitchencontroller.cpp \
     main.cpp \
     mainwindow.cpp
 
@@ -24,6 +25,7 @@ HEADERS += \
     StaffController.h \
     Table.h \
     TableController.h \
+    kitchencontroller.h \
     mainwindow.h
 
 FORMS += \

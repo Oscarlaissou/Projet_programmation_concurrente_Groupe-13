@@ -8,7 +8,7 @@
 #include <QTimer>
 #include "TableController.h"
 #include "StaffController.h"
-
+#include "KitchenController.h"
 namespace Ui {
 class MainWindow;
 }
@@ -31,8 +31,11 @@ private:
     QTimer *simulationTimer; // Timer pour animer les personnages
     TableController *tableController;
     StaffController *staffController;
+    KitchenController *kitchenController;
+
 
     void setupTables();
+    void setupKitchen();
     void connectToDatabase();
 };
 
