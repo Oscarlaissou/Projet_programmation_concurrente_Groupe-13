@@ -12,5 +12,8 @@
         <file>build/Desktop_Qt_6_8_0_MinGW_64_bit-Debug/debug/images/lave_vaissele.png</file>
         <file>build/Desktop_Qt_6_8_0_MinGW_64_bit-Debug/debug/images/refrigerateur.png</file>
         <file>build/Desktop_Qt_6_8_0_MinGW_64_bit-Debug/debug/images/refrigera.png</file>
+        <file>build/Desktop_Qt_6_8_0_MinGW_64_bit-Debug/debug/images/comp.png</file>
+        <file>build/Desktop_Qt_6_8_0_MinGW_64_bit-Debug/debug/images/comp1.png</file>
+        <file>build/Desktop_Qt_6_8_0_MinGW_64_bit-Debug/debug/images/cu.png</file>
     </qresource>
 </RCC>

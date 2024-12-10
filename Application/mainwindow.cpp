@@ -151,12 +151,17 @@ void MainWindow::setupKitchen() {
 
 
     QVector<KitchenElement> kitchenElements = {
-        {":build/Desktop_Qt_6_8_0_MinGW_64_bit-Debug/debug/images/refrigera.png", 50, 600},
-        {":build/Desktop_Qt_6_8_0_MinGW_64_bit-Debug/debug/images/Feux.png", 400, 50},
+        {":build/Desktop_Qt_6_8_0_MinGW_64_bit-Debug/debug/images/refrigera.png", 50, 500},
+        {":build/Desktop_Qt_6_8_0_MinGW_64_bit-Debug/debug/images/Feux.png", 440, -120},
+        {":build/Desktop_Qt_6_8_0_MinGW_64_bit-Debug/debug/images/Feux.png", 340, -120},
+        {":build/Desktop_Qt_6_8_0_MinGW_64_bit-Debug/debug/images/Feux.png", 240, -120},
+        {":build/Desktop_Qt_6_8_0_MinGW_64_bit-Debug/debug/images/cu.png", 40, -120},
+        //{":build/Desktop_Qt_6_8_0_MinGW_64_bit-Debug/debug/images/Feux.png", 40, -120},
+        //{":build/Desktop_Qt_6_8_0_MinGW_64_bit-Debug/debug/images/cu.png", 540, 200},
         {":build/Desktop_Qt_6_8_0_MinGW_64_bit-Debug/debug/images/chambre_froide.png", 50, 200},
-        {":build/Desktop_Qt_6_8_0_MinGW_64_bit-Debug/debug/images/cuiseur.png", 550, 200},
-        {":build/Desktop_Qt_6_8_0_MinGW_64_bit-Debug/debug/images/gardev.png", 350, 600},
-        {":build/Desktop_Qt_6_8_0_MinGW_64_bit-Debug/debug/images/lave_vaissele.png", 500, 500}
+        {":build/Desktop_Qt_6_8_0_MinGW_64_bit-Debug/debug/images/cuiseur.png", 540, -120},
+        {":build/Desktop_Qt_6_8_0_MinGW_64_bit-Debug/debug/images/gardev.png", 440, 500},
+        {":build/Desktop_Qt_6_8_0_MinGW_64_bit-Debug/debug/images/lave_vaissele.png", 540, 500}
     };
 
     // Parcours et ajout des éléments
