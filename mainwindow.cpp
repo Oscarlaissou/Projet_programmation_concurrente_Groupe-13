@@ -127,6 +127,17 @@ void MainWindow::startchefpartie(QWidget *rightPanel) {
     chef->afficherchefpartie(rightPanel);    // Démarrer l'animation du cuisinier
 
 }
+void MainWindow::startcommis1(QWidget *rightPanel) {
+    commis1 *chef = new commis1(this);  // Créer un cuisinier
+    chef->affichercommis1(rightPanel);    // Démarrer l'animation du cuisinier
+
+}
+void MainWindow::startcommis2(QWidget *rightPanel) {
+    commis2 *chef = new commis2(this);  // Créer un cuisinier
+    chef->affichercommis2(rightPanel);    // Démarrer l'animation du cuisinier
+
+}
+
 
     // Vous pouvez aussi ici gérer d'autres actions si nécessaire pour le cuisinier
 
@@ -145,6 +156,8 @@ void MainWindow::start_simulation()
     startChefpatisserie(ui->CuisineGraphicsView);
     startplongeur(ui->CuisineGraphicsView);
     startchefpartie(ui->CuisineGraphicsView);
+    startcommis1(ui->CuisineGraphicsView);
+     startcommis2(ui->CuisineGraphicsView);
     // Connecter le timer pour animer les personnages
     connect(simulationTimer, &QTimer::timeout, this, [=]() {
         for (int i = 0; i < 5; ++i) {

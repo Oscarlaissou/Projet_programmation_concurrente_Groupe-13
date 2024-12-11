@@ -13,6 +13,8 @@
 #include "chefdepatisserie.h"
 #include "plongeur.h"
 #include "chefdepartie.h"
+#include "commis1.h"
+#include "commis2.h"
 namespace Ui {
 class MainWindow;
 }
@@ -28,6 +30,8 @@ public:
     void startChefpatisserie(QWidget *rightPanel);
      void startplongeur(QWidget *rightPanel);
     void startchefpartie(QWidget *rightPanel);
+     void startcommis1(QWidget *rightPanel);
+      void startcommis2(QWidget *rightPanel);
 
 private slots:
     void start_simulation(); // Démarre la simulation

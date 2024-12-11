@@ -19,6 +19,8 @@ SOURCES += \
     chefdecuisine.cpp \
     chefdepartie.cpp \
     chefdepatisserie.cpp \
+    commis1.cpp \
+    commis2.cpp \
     human.cpp \
     kitchencontroller.cpp \
     main.cpp \
@@ -33,6 +35,8 @@ HEADERS += \
     chefdecuisine.h \
     chefdepartie.h \
     chefdepatisserie.h \
+    commis1.h \
+    commis2.h \
     human.h \
     kitchencontroller.h \
     mainwindow.h \

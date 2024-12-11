@@ -1,38 +1,39 @@
-#include "chefdepartie.h"
+#include "commis1.h"
+
 
 #include "human.h"  // Inclure la classe human
 #include <QTimer>
-chefdepartie::chefdepartie(QWidget *parent) : QWidget(parent) {
+commis1::commis1(QWidget *parent) : QWidget(parent) {
 
 }
 
-void chefdepartie::afficherchefpartie(QWidget *rightPanel) {
+void commis1::affichercommis1(QWidget *rightPanel) {
     // Créer un QLabel pour afficher l'image du cuisinier
-    QPixmap pixmap4(":build/Desktop_Qt_6_8_0_MinGW_64_bit-Debug/debug/images/chef_partie2.png");
+    QPixmap pixmap4(":build/Desktop_Qt_6_8_0_MinGW_64_bit-Debug/debug/images/commis2.png");
 
-    QLabel *label36 = new QLabel(rightPanel);  // Utiliser 'rightPanel' comme parent
-    label36->setPixmap(pixmap4);
-    label36->setScaledContents(true);
+    QLabel *label37 = new QLabel(rightPanel);  // Utiliser 'rightPanel' comme parent
+    label37->setPixmap(pixmap4);
+    label37->setScaledContents(true);
 
     // Positionner correctement l'image dans 'rightPanel'
-    label36->setGeometry(230, 200, 30, 40);
-    label36->setStyleSheet("border: none;");
-    label36->setFrameStyle(QFrame::NoFrame);
-    label36->setFocusPolicy(Qt::NoFocus);
+    label37->setGeometry(450, 200, 30, 40);
+    label37->setStyleSheet("border: none;");
+    label37->setFrameStyle(QFrame::NoFrame);
+    label37->setFocusPolicy(Qt::NoFocus);
 
 
     // S'assurer que le label est visible et au premier plan
-    label36->raise();
-    label36->show();
+    label37->raise();
+    label37->show();
 
     // Créer un objet 'human' pour déplacer le personnage
     human *hum = new human(rightPanel);
 
     // Position de départ (position initiale du cuisinier)
-    QPoint startPos(230, 200);
+    QPoint startPos(450, 200);
 
     // Position de destination (par exemple, vers une autre partie du panel)
-    QPoint endPos(100, 200);  // Exemple de destination
+    QPoint endPos(440, 600);  // Exemple de destination
 
     // Durée du mouvement (en millisecondes)
     int duration = 8000;
@@ -43,8 +44,9 @@ void chefdepartie::afficherchefpartie(QWidget *rightPanel) {
     QTimer *timer = new QTimer(this);
     connect(timer, &QTimer::timeout, [=]() {
         // Lorsque le timer atteint son délai, lancer le mouvement
-        hum->moveLoop(label36, startPos, endPos, duration);
+        hum->moveLoop(label37, startPos, endPos, duration);
     });
 
     // Démarrer le timer avec le délai spécifié
     timer->start(delayBeforeMove);}
+
