@@ -122,6 +122,12 @@ void MainWindow::startplongeur(QWidget *rightPanel) {
     plongeur *chef = new plongeur(this);  // Créer un cuisinier
     chef->afficherplongeur(rightPanel);    // Démarrer l'animation du cuisinier
 }
+void MainWindow::startchefpartie(QWidget *rightPanel) {
+    chefdepartie *chef = new chefdepartie(this);  // Créer un cuisinier
+    chef->afficherchefpartie(rightPanel);    // Démarrer l'animation du cuisinier
+
+}
+
     // Vous pouvez aussi ici gérer d'autres actions si nécessaire pour le cuisinier
 
 void MainWindow::start_simulation()
@@ -138,6 +144,7 @@ void MainWindow::start_simulation()
     startChefAnimation(ui->CuisineGraphicsView);  // Appeler la méthode spécifique
     startChefpatisserie(ui->CuisineGraphicsView);
     startplongeur(ui->CuisineGraphicsView);
+    startchefpartie(ui->CuisineGraphicsView);
     // Connecter le timer pour animer les personnages
     connect(simulationTimer, &QTimer::timeout, this, [=]() {
         for (int i = 0; i < 5; ++i) {

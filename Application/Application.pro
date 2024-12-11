@@ -17,6 +17,7 @@ SOURCES += \
     Table.cpp \
     TableController.cpp \
     chefdecuisine.cpp \
+    chefdepartie.cpp \
     chefdepatisserie.cpp \
     human.cpp \
     kitchencontroller.cpp \
@@ -30,6 +31,7 @@ HEADERS += \
     Table.h \
     TableController.h \
     chefdecuisine.h \
+    chefdepartie.h \
     chefdepatisserie.h \
     human.h \
     kitchencontroller.h \

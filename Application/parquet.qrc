@@ -26,9 +26,9 @@
         <file>build/Desktop_Qt_6_8_0_MinGW_64_bit-Debug/debug/images/chef_cuisinier.png</file>
         <file>build/Desktop_Qt_6_8_0_MinGW_64_bit-Debug/debug/images/chef_partie1.png</file>
         <file>build/Desktop_Qt_6_8_0_MinGW_64_bit-Debug/debug/images/chef_partie2.png</file>
-        <file>build/Desktop_Qt_6_8_0_MinGW_64_bit-Debug/debug/images/commis1.png</file>
         <file>build/Desktop_Qt_6_8_0_MinGW_64_bit-Debug/debug/images/commis2.png</file>
         <file>build/Desktop_Qt_6_8_0_MinGW_64_bit-Debug/debug/images/plongeur.png</file>
         <file>build/Desktop_Qt_6_8_0_MinGW_64_bit-Debug/debug/images/chef_cuisine.png</file>
+        <file>build/Desktop_Qt_6_8_0_MinGW_64_bit-Debug/debug/images/chef_partie.png</file>
     </qresource>
 </RCC>
