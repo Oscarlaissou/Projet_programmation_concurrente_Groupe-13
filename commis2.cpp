@@ -48,7 +48,7 @@ void commis2::affichercommis2(QWidget *rightPanel) {
 
     // Démarrer le timer avec le délai spécifié
     timer->start(delayBeforeMove);}
-// // Créer un QTimer pour déclencher l'affichage de l'image à la fin du mouvement
+// Créer un QTimer pour déclencher l'affichage de l'image à la fin du mouvement
 // QTimer::singleShot(duration, [=]() {
 //     // Créer un QLabel pour afficher une image à la position finale
 //     QLabel *finalLabel = new QLabel(rightPanel);
