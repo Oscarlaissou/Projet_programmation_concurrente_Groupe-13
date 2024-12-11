@@ -9,6 +9,9 @@
 #include "TableController.h"
 #include "StaffController.h"
 #include "KitchenController.h"
+#include "chefdecuisine.h"
+#include "chefdepatisserie.h"
+#include "plongeur.h"
 namespace Ui {
 class MainWindow;
 }
@@ -20,6 +23,9 @@ class MainWindow : public QMainWindow
 public:
     explicit MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
+     void startChefAnimation(QWidget *rightPanel);
+    void startChefpatisserie(QWidget *rightPanel);
+     void startplongeur(QWidget *rightPanel);
 
 private slots:
     void start_simulation(); // Démarre la simulation
@@ -32,6 +38,8 @@ private:
     TableController *tableController;
     StaffController *staffController;
     KitchenController *kitchenController;
+    chefdecuisine *chefCuisine;
+    chefdepatisserie *chefPatisserie;
 
 
     void setupTables();

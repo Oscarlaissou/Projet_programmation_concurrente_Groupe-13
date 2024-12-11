@@ -14,6 +14,21 @@
         <file>build/Desktop_Qt_6_8_0_MinGW_64_bit-Debug/debug/images/refrigera.png</file>
         <file>build/Desktop_Qt_6_8_0_MinGW_64_bit-Debug/debug/images/comp.png</file>
         <file>build/Desktop_Qt_6_8_0_MinGW_64_bit-Debug/debug/images/comp1.png</file>
-        <file>build/Desktop_Qt_6_8_0_MinGW_64_bit-Debug/debug/images/cu.png</file>
+        <file>build/Desktop_Qt_6_8_0_MinGW_64_bit-Debug/debug/images/new_cuisine.png</file>
+        <file>build/Desktop_Qt_6_8_0_MinGW_64_bit-Debug/debug/images/Levier de cuisine.png</file>
+        <file>build/Desktop_Qt_6_8_0_MinGW_64_bit-Debug/debug/images/cuisin.png</file>
+        <file>build/Desktop_Qt_6_8_0_MinGW_64_bit-Debug/debug/images/reserve.png</file>
+        <file>build/Desktop_Qt_6_8_0_MinGW_64_bit-Debug/debug/images/refri.png</file>
+        <file>build/Desktop_Qt_6_8_0_MinGW_64_bit-Debug/debug/images/comptoir.png</file>
+        <file>build/Desktop_Qt_6_8_0_MinGW_64_bit-Debug/debug/images/lave.png</file>
+        <file>build/Desktop_Qt_6_8_0_MinGW_64_bit-Debug/debug/images/chef_patisserie.png</file>
+        <file>build/Desktop_Qt_6_8_0_MinGW_64_bit-Debug/debug/images/chefcuisine.png</file>
+        <file>build/Desktop_Qt_6_8_0_MinGW_64_bit-Debug/debug/images/chef_cuisinier.png</file>
+        <file>build/Desktop_Qt_6_8_0_MinGW_64_bit-Debug/debug/images/chef_partie1.png</file>
+        <file>build/Desktop_Qt_6_8_0_MinGW_64_bit-Debug/debug/images/chef_partie2.png</file>
+        <file>build/Desktop_Qt_6_8_0_MinGW_64_bit-Debug/debug/images/commis1.png</file>
+        <file>build/Desktop_Qt_6_8_0_MinGW_64_bit-Debug/debug/images/commis2.png</file>
+        <file>build/Desktop_Qt_6_8_0_MinGW_64_bit-Debug/debug/images/plongeur.png</file>
+        <file>build/Desktop_Qt_6_8_0_MinGW_64_bit-Debug/debug/images/chef_cuisine.png</file>
     </qresource>
 </RCC>

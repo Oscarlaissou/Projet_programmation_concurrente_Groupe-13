@@ -16,17 +16,25 @@ SOURCES += \
     StaffController.cpp \
     Table.cpp \
     TableController.cpp \
+    chefdecuisine.cpp \
+    chefdepatisserie.cpp \
+    human.cpp \
     kitchencontroller.cpp \
     main.cpp \
-    mainwindow.cpp
+    mainwindow.cpp \
+    plongeur.cpp
 
 HEADERS += \
     Staff.h \
     StaffController.h \
     Table.h \
     TableController.h \
+    chefdecuisine.h \
+    chefdepatisserie.h \
+    human.h \
     kitchencontroller.h \
-    mainwindow.h
+    mainwindow.h \
+    plongeur.h
 
 FORMS += \
     mainwindow.ui
