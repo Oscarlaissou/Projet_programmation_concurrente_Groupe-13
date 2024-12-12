@@ -1,0 +1,40 @@
+cmake_minimum_required(VERSION 3.10)
+
+project(Application)
+
+set(CMAKE_CXX_STANDARD 17)
+
+# Ajouter des fichiers sources
+add_executable(Application 
+                main.cpp
+                mainwindow.cpp
+                mainwindow.h
+                mainwindow.ui
+                Staff.cpp
+                Staff.h
+                StaffController.cpp
+                StaffController.h
+                Table.cpp
+                Table.h
+                TableController.cpp
+                TableController.h
+                parquet.qrc
+                )
+
+# Si des bibliothèques externes sont nécessaires
+# include_directories(/path/to/include)
+
+# Lier des bibliothèques
+# target_link_libraries(MonProjet ma_bibliotheque)
+ find_package(Qt6 REQUIRED COMPONENTS Core Gui Widgets)
+
+Lier Qt à ton projet
+target_link_libraries(Application Qt6::Core Qt6::Gui Qt6::Widgets)
+
+# Si tu utilises Qt6, ce serait :
+# target_link_libraries(MonProjet Qt6::Core Qt6::Gui Qt6::Widgets)
+
+# Pour générer l'interface graphique (moc, uic, rcc) automatiquement avec Qt
+set(CMAKE_AUTOMOC ON)  # Pour activer le moc automatiquement
+set(CMAKE_AUTOUIC ON)  # Pour activer l'uic automatiquement
+set(CMAKE_AUTORCC ON)  # Pour activer l'auto-rcc si besoin
