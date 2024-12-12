@@ -19,8 +19,10 @@ void human::moveLoop(QLabel *personnageLabel, const QPoint &startPos, const QPoi
     moving = true;  // L'animation commence
 
     // Définir la position initiale
-    personnageLabel->setGeometry(startPos.x(), startPos.y(), 30, 60);
-
+    personnageLabel->setGeometry(startPos.x(), startPos.y(), 40, 70);
+    personnageLabel->setStyleSheet("border: none; background: transparent;");
+    personnageLabel->setFrameStyle(QFrame::NoFrame);
+    personnageLabel->setFocusPolicy(Qt::NoFocus);
     // Animation pour aller au point final
     QPropertyAnimation *goToEnd = new QPropertyAnimation(personnageLabel, "pos");
     goToEnd->setDuration(duration);

@@ -30,5 +30,6 @@
         <file>build/Desktop_Qt_6_8_0_MinGW_64_bit-Debug/debug/images/plongeur.png</file>
         <file>build/Desktop_Qt_6_8_0_MinGW_64_bit-Debug/debug/images/chef_cuisine.png</file>
         <file>build/Desktop_Qt_6_8_0_MinGW_64_bit-Debug/debug/images/chef_partie.png</file>
+        <file>build/Desktop_Qt_6_8_0_MinGW_64_bit-Debug/debug/images/plat.png</file>
     </qresource>
 </RCC>

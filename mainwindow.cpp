@@ -141,8 +141,53 @@ void MainWindow::startcommis2(QWidget *rightPanel) {
 
     // Vous pouvez aussi ici gérer d'autres actions si nécessaire pour le cuisinier
 
+// void MainWindow::start_simulation()
+// {
+//     // Ajouter 5 personnages avec des positions initiales aléatoires
+//     for (int i = 0; i < 5; ++i) {
+//         int x = QRandomGenerator::global()->bounded(0, ui->RestaurantGraphicsView->width() - 50);
+//         int y = QRandomGenerator::global()->bounded(0, ui->RestaurantGraphicsView->height() - 50);
+//         staffController->addStaff(":build/Desktop_Qt_6_8_0_MinGW_64_bit-Debug/debug/images/Personnage.png", i, x, y, 0.5); // Échelle à 50%
+//     }
+
+
+//     // Démarrer l'animation du cuisinier
+//     startChefAnimation(ui->CuisineGraphicsView);  // Appeler la méthode spécifique
+//     startChefpatisserie(ui->CuisineGraphicsView);
+//     startplongeur(ui->CuisineGraphicsView);
+//     startchefpartie(ui->CuisineGraphicsView);
+//     startcommis1(ui->CuisineGraphicsView);
+//      startcommis2(ui->CuisineGraphicsView);
+//     // Connecter le timer pour animer les personnages
+//     connect(simulationTimer, &QTimer::timeout, this, [=]() {
+//         for (int i = 0; i < 5; ++i) {
+//             int dx = QRandomGenerator::global()->bounded(-10, 10); // Déplacement horizontal aléatoire
+//             int dy = QRandomGenerator::global()->bounded(-10, 10); // Déplacement vertical aléatoire
+//             staffController->moveStaff(i, dx, dy);
+//         }
+//     });
+
+//     simulationTimer->start(100); // Mise à jour toutes les 100 ms
+//     qDebug() << "Simulation démarrée.";
+// }
+
+
 void MainWindow::start_simulation()
 {
+    // Vérifier si la simulation est déjà en cours
+    if (isSimulationRunning) {
+        qDebug() << "Simulation déjà en cours. Veuillez mettre en pause avant de relancer.";
+        return; // Ne rien faire si la simulation est déjà active
+    }
+
+    isSimulationRunning = true; // Marquer la simulation comme active
+
+    // Désactiver le bouton de simulation
+    ui->Start->setEnabled(false);
+
+    ui->Pause->setEnabled(true); // Activer le bouton "Pause"
+
+
     // Ajouter 5 personnages avec des positions initiales aléatoires
     for (int i = 0; i < 5; ++i) {
         int x = QRandomGenerator::global()->bounded(0, ui->RestaurantGraphicsView->width() - 50);
@@ -150,14 +195,14 @@ void MainWindow::start_simulation()
         staffController->addStaff(":build/Desktop_Qt_6_8_0_MinGW_64_bit-Debug/debug/images/Personnage.png", i, x, y, 0.5); // Échelle à 50%
     }
 
-
     // Démarrer l'animation du cuisinier
-    startChefAnimation(ui->CuisineGraphicsView);  // Appeler la méthode spécifique
+    startChefAnimation(ui->CuisineGraphicsView);
     startChefpatisserie(ui->CuisineGraphicsView);
     startplongeur(ui->CuisineGraphicsView);
     startchefpartie(ui->CuisineGraphicsView);
     startcommis1(ui->CuisineGraphicsView);
-     startcommis2(ui->CuisineGraphicsView);
+    startcommis2(ui->CuisineGraphicsView);
+
     // Connecter le timer pour animer les personnages
     connect(simulationTimer, &QTimer::timeout, this, [=]() {
         for (int i = 0; i < 5; ++i) {
@@ -170,6 +215,43 @@ void MainWindow::start_simulation()
     simulationTimer->start(100); // Mise à jour toutes les 100 ms
     qDebug() << "Simulation démarrée.";
 }
+
+
+
+// void MainWindow::pause_simulation()
+// {
+//     if (!isSimulationRunning) {
+//         qDebug() << "Aucune simulation en cours à mettre en pause.";
+//         return;
+//     }
+
+//     simulationTimer->stop(); // Arrêter le timer
+//     isSimulationRunning = false; // Marquer la simulation comme arrêtée
+//     ui->Start->setEnabled(true); // Réactiver le bouton de simulation
+//     ui->Pause->setEnabled(false); // Désactiver le bouton "Pause"
+
+//     qDebug() << "Simulation mise en pause.";
+// }
+
+
+void MainWindow::pause_simulation()
+{
+    qDebug() << "isSimulationRunning:" << isSimulationRunning;
+    qDebug() << "simulationTimer active:" << simulationTimer->isActive();
+
+    if (!isSimulationRunning) {
+        qDebug() << "Aucune simulation en cours à mettre en pause.";
+        return;
+    }
+
+    simulationTimer->stop(); // Arrêter le timer
+    isSimulationRunning = false; // Marquer la simulation comme arrêtée
+    ui->Start->setEnabled(true); // Réactiver le bouton de simulation
+    ui->Pause->setEnabled(false); // Désactiver le bouton "Pause"
+
+    qDebug() << "Simulation mise en pause.";
+}
+
 
 // void MainWindow::start_simulation() {
 //     // Création des chefs

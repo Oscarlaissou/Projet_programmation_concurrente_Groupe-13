@@ -16,7 +16,7 @@ void chefdepartie::afficherchefpartie(QWidget *rightPanel) {
 
     // Positionner correctement l'image dans 'rightPanel'
     label36->setGeometry(230, 200, 30, 40);
-    label36->setStyleSheet("border: none;");
+    label36->setStyleSheet("border: none; background: transparent;");
     label36->setFrameStyle(QFrame::NoFrame);
     label36->setFocusPolicy(Qt::NoFocus);
 
@@ -29,15 +29,15 @@ void chefdepartie::afficherchefpartie(QWidget *rightPanel) {
     human *hum = new human(rightPanel);
 
     // Position de départ (position initiale du cuisinier)
-    QPoint startPos(230, 200);
+    QPoint startPos(200, 200);
 
     // Position de destination (par exemple, vers une autre partie du panel)
-    QPoint endPos(100, 200);  // Exemple de destination
+    QPoint endPos(50, 200);  // Exemple de destination
 
     // Durée du mouvement (en millisecondes)
     int duration = 8000;
 
-    int delayBeforeMove = 5200;  // Par exemple, 2 secondes (2000 ms)
+    int delayBeforeMove = 3500;  // Par exemple, 2 secondes (2000 ms)
 
     // Créer un QTimer pour démarrer l'animation après le délai
     QTimer *timer = new QTimer(this);

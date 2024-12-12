@@ -53,7 +53,7 @@ void chefdecuisine::affichercuisinier(QWidget *rightPanel) {
     label33->setScaledContents(true);
 
     // Positionner correctement l'image dans 'rightPanel'
-    label33->setGeometry(20, 180, 30, 40);
+    label33->setGeometry(20, 300, 30, 40);
     label33->setStyleSheet("border: none;");
     label33->setFrameStyle(QFrame::NoFrame);
     label33->setFocusPolicy(Qt::NoFocus);
@@ -66,7 +66,7 @@ void chefdecuisine::affichercuisinier(QWidget *rightPanel) {
     human *hum = new human(rightPanel);
 
     // Position de départ (position initiale du cuisinier)
-    QPoint startPos(50, 350);
+    QPoint startPos(50, 300);
 
     // Position de destination (par exemple, vers une autre partie du panel)
     QPoint endPos(350, 200);  // Exemple de destination

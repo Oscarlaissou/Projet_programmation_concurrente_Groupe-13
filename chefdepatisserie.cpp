@@ -96,7 +96,7 @@ void chefdepatisserie::afficherpatissier(QWidget *rightPanel) {
     // Durée du mouvement (en millisecondes)
     int duration = 8000;
 
-    int delayBeforeMove = 5200;  // Par exemple, 2 secondes (2000 ms)
+    int delayBeforeMove = 3500;  // Par exemple, 2 secondes (2000 ms)
 
     // Créer un QTimer pour démarrer l'animation après le délai
     QTimer *timer = new QTimer(this);

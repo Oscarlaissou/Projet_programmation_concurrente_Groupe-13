@@ -32,10 +32,11 @@ public:
     void startchefpartie(QWidget *rightPanel);
      void startcommis1(QWidget *rightPanel);
       void startcommis2(QWidget *rightPanel);
+     bool isSimulationRunning = false;
 
 private slots:
     void start_simulation(); // Démarre la simulation
-
+    void pause_simulation();
 private:
     Ui::MainWindow *ui;
     QSqlDatabase db; // Connexion à la base de données
