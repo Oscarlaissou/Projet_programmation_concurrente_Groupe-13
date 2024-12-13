@@ -2,19 +2,23 @@
 #define TABLE_H
 
 #include <QObject>
-#include <QLabel>
-#include <QPixmap>
+#include <QGraphicsPixmapItem>
 
-class Table : public QObject
-{
+class Table : public QObject {
     Q_OBJECT
 
 public:
-    explicit Table(const QString &imagePath, int x, int y, QWidget *parent = nullptr);
-    QLabel* getLabel() const;
+    explicit Table(const QString &imagePath, int x, int y, int capacity, QObject *parent = nullptr);
+
+    QGraphicsPixmapItem* getGraphicsItem() const;
+    int getCapacity() const;
+    bool isOccupied() const;
+    void setOccupied(bool occupied);
 
 private:
-    QLabel *tableLabel; // QLabel pour représenter l'image de la table
+    QGraphicsPixmapItem *graphicsItem; // Élément graphique
+    int capacity;                      // Capacité de la table
+    bool occupied;                     // État de la table
 };
 
 #endif // TABLE_H
