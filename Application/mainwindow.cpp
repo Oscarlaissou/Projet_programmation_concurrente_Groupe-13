@@ -4,15 +4,20 @@
 #include <QDebug>
 #include <QRandomGenerator>
 #include <QGraphicsPixmapItem>
+#include <QMessageBox>
 
 #include "StaffController.h"
 #include "TableController.h"
 #include "KitchenController.h"
-#include "StaffController.cpp"
+
 #include "TableController.cpp"
 #include "chefdepatisserie.h"
 #include "chefdecuisine.h"
-
+#include "ClientController.h"
+#include "RoomMasterController.h"
+#include "Client.h"
+#include "OrderController.h"
+#include "RoomMasterController.cpp"
 
 
 
@@ -20,35 +25,63 @@ MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
     , ui(new Ui::MainWindow)
     , simulationTimer(new QTimer(this))
+    , timer(new QTimer(this)) // Initialisation du timer pour le chronomètre
+    , elapsedSeconds(0)       // Initialisation du compteur de secondes
+    , viewWindow(new ViewWindow(this))
     , tableController(new TableController())
-    , staffController(new StaffController())
     , kitchenController(new KitchenController()) // Initialisation
+    , clientController(new ClientController())
+    , roomMasterController(new RoomMasterController()) // Initialisation de RoomMasterController
 {
     ui->setupUi(this);
 
     // Scène pour la salle principale
-    QGraphicsScene *Scene = new QGraphicsScene(this);
-    ui->RestaurantGraphicsView->setScene(Scene);
+    QGraphicsScene *scene = new QGraphicsScene(this);
+    ui->RestaurantGraphicsView->setScene(scene);
 
     // Scène pour la cuisine
     QGraphicsScene *kitchenScene = new QGraphicsScene(this);
     ui->CuisineGraphicsView->setScene(kitchenScene);
 
     // Configurer les contrôleurs avec les scènes
-    tableController->setScene(Scene);       // Tables dans la salle principale
-    staffController->setScene(Scene);       // Personnel dans la salle principale
+    tableController->setScene(scene);       // Tables dans la salle principale
     kitchenController->setScene(kitchenScene);  // Cuisine dans la vue de la cuisine
+    clientController->setScene(scene);
+
+    // Lier tableController à clientController
+    clientController->setTableController(tableController);
+
+    // Ajouter le RoomMaster à la scène
+    roomMasterController->setScene(scene);
+    roomMasterController->addRoomMaster(70, 60); // Positionner le RoomMaster à (70, 60)
 
     // Connexion à la base de données
     connectToDatabase();
-
+    orderController = new OrderController(db, this);
     // Configuration
     setupTables();
     setupKitchen();
 
-    // Connecter le bouton "Start" à la simulation
-    connect(ui->Start, &QPushButton::clicked, this, &MainWindow::start_simulation);
+    // // Connecter le bouton "Start" à la simulation
+    // connect(ui->Start, &QPushButton::clicked, this, &MainWindow::start_simulation);
+
+
+    // Configurer l'affichage du QTimeEdit
+    ui->timeEditer->setDisplayFormat("mm:ss");
+
+    // Connectez les boutons du chronomètre aux slots
+    connect(ui->startButton, &QPushButton::clicked, this, &MainWindow::onStartButtonClicked);
+    connect(ui->pauseButton, &QPushButton::clicked, this, &MainWindow::onPauseButtonClicked);
+    connect(ui->stopButton, &QPushButton::clicked, this, &MainWindow::onStopButtonClicked);
+
+    // Connectez le bouton Dashboard au slot
+    connect(ui->dashboardButton, &QPushButton::clicked, this, &MainWindow::onDashboardButtonClicked);
+
+    // Connectez le timer à la mise à jour de l'affichage
+    connect(timer, &QTimer::timeout, this, &MainWindow::updateTimeDisplay);
+
 }
+
 
 MainWindow::~MainWindow()
 {
@@ -56,12 +89,78 @@ MainWindow::~MainWindow()
         db.close();
     }
     delete ui;
+    delete simulationTimer;
+    delete tableController;
+    delete clientController;
+    delete roomMasterController;
+    delete orderController;
+    delete timer;
+    delete viewWindow;
+}
+
+// Mise à jour de l'affichage du temps
+void MainWindow::updateTimeDisplay()
+{
+    elapsedSeconds++;
+    QTime time(0, 0, 0); // Temps de départ (00:00:00)
+    time = time.addSecs(elapsedSeconds); // Ajoute le temps écoulé
+    ui->timeEditer->setTime(time); // Met à jour le QTimeEdit
+}
+
+// Slot pour le bouton Démarrer
+void MainWindow::onStartButtonClicked()
+{
+    qDebug() << "Bouton Démarrer cliqué.";
+
+    // Démarrer la simulation si ce n'est pas déjà en cours
+    if (!simulationStarted) {
+        start_simulation();  // Lancer la simulation pour la première fois
+    }
+
+    // Démarrer le chronomètre si ce n'est pas déjà fait
+    if (!timer->isActive()) {
+        timer->start(1000);  // Démarre le chronomètre
+    }
+
+    // Lancer la simulation si ce n'est pas déjà en cours
+    if (!simulationTimer->isActive()) {
+        simulationTimer->start(1000);  // Mettre à jour chaque seconde
+    }
+}
+
+// Slot pour le bouton Pause
+void MainWindow::onPauseButtonClicked()
+{
+    qDebug() << "Bouton Pause cliqué.";
+    timer->stop(); // Arrête temporairement le timer
+    simulationTimer->stop();
+    qDebug() << "Simulation et chronomètre en pause.";
+
+}
+
+// Slot pour le bouton Stopper
+void MainWindow::onStopButtonClicked()
+{
+    qDebug() << "Bouton Stopper cliqué.";
+    timer->stop();             // Arrête le timer
+    elapsedSeconds = 0;        // Réinitialise le temps écoulé
+    simulationStarted = false; // Réinitialiser l'état de la simulation
+
+    QTime time(0, 0, 0);       // Réinitialise l'heure à 00:00:00
+    ui->timeEditer->setTime(time); // Met à jour l'affichage dans QTimeEdit
+
+    // Supprimer les clients de la scène
+    if (clientController) {
+        clientController->removeAllClients();
+        qDebug() << "Tous les clients ont été supprimés.";
+    }
+
 }
 
 void MainWindow::connectToDatabase()
 {
-    db = QSqlDatabase::addDatabase("QSQLITE");
-    db.setDatabaseName("app BD.db");
+    db = QSqlDatabase::addDatabase("QSQLITE","uniqueConnectionName");
+    db.setDatabaseName(QCoreApplication::applicationDirPath() + "/database.db");
 
     if (!db.open()) {
         qDebug() << "Erreur lors de la connexion à la base de données :" << db.lastError().text();
@@ -85,7 +184,7 @@ void MainWindow::setupKitchen() {
         {":build/Desktop_Qt_6_8_0_MinGW_64_bit-Debug/debug/images/cuiseur.png", QPoint(540, -40)},
         {":build/Desktop_Qt_6_8_0_MinGW_64_bit-Debug/debug/images/reserve.png", QPoint(440, 400)},
         {":build/Desktop_Qt_6_8_0_MinGW_64_bit-Debug/debug/images/chambre_froide.png", QPoint(520, 380)},
-        {":build/Desktop_Qt_6_8_0_MinGW_64_bit-Debug/debug/images/comptoir.png", QPoint(20, 180)}
+        {":build/Desktop_Qt_6_8_0_MinGW_64_bit-Debug/debug/images/comptoir1.png", QPoint(20, 180)}
     };
 
     // Ajout des éléments à la cuisine
@@ -97,17 +196,33 @@ void MainWindow::setupKitchen() {
 }
 
 
-
+// Configuration des tables
 void MainWindow::setupTables()
 {
-    // Ajouter des tables statiques via le TableController
-   tableController->addTable(":build/Desktop_Qt_6_8_0_MinGW_64_bit-Debug/debug/images/table-ronde.png", 50, 50);
-   tableController->addTable(":build/Desktop_Qt_6_8_0_MinGW_64_bit-Debug/debug/images/table-ronde.png", 200, 100);
-   tableController->addTable(":build/Desktop_Qt_6_8_0_MinGW_64_bit-Debug/debug/images/table-ronde.png", 350, 200);
-   tableController->addTable(":build/Desktop_Qt_6_8_0_MinGW_64_bit-Debug/debug/images/table-ronde.png", 500, 300);
+    if (!tableController) {
+        qWarning() << "Erreur : TableController n'est pas initialisé.";
+        return;
+    }
 
-   qDebug() << "Tables configurées et affichées sur l'interface.";
+    // Organiser les tables avec la logique principale
+    tableController->setupTables();
+
+    // Ajouter des tables spécifiques manuellement
+    tableController->addTable(":build/Desktop_Qt_6_8_0_MinGW_64_bit-Debug/debug/images/comptoir.png", 70, 60, 120, 120,0);
+
+    qDebug() << "Tables configurées avec des ajouts spécifiques.";
 }
+
+void MainWindow::onDashboardButtonClicked()
+{
+    if (viewWindow) {
+        viewWindow->show(); // Afficher la fenêtre du tableau de bord
+    } else {
+        qDebug() << "Erreur : ViewWindow n'a pas été initialisée.";
+    }
+}
+
+
 
 void MainWindow::startChefAnimation(QWidget *rightPanel) {
     chefdecuisine *chef = new chefdecuisine(this);  // Créer un cuisinier
@@ -127,175 +242,76 @@ void MainWindow::startchefpartie(QWidget *rightPanel) {
     chef->afficherchefpartie(rightPanel);    // Démarrer l'animation du cuisinier
 
 }
+void MainWindow::startcommis1(QWidget *rightPanel) {
+    commis1 *chef = new commis1(this);  // Créer un cuisinier
+    chef->affichercommis1(rightPanel);    // Démarrer l'animation du cuisinier
 
-    // Vous pouvez aussi ici gérer d'autres actions si nécessaire pour le cuisinier
+}
+void MainWindow::startcommis2(QWidget *rightPanel) {
+    commis2 *chef = new commis2(this);  // Créer un cuisinier
+    chef->affichercommis2(rightPanel);    // Démarrer l'animation du cuisinier
+
+}
+
+
 
 void MainWindow::start_simulation()
 {
-    // Ajouter 5 personnages avec des positions initiales aléatoires
-    for (int i = 0; i < 5; ++i) {
-        int x = QRandomGenerator::global()->bounded(0, ui->RestaurantGraphicsView->width() - 50);
-        int y = QRandomGenerator::global()->bounded(0, ui->RestaurantGraphicsView->height() - 50);
-        staffController->addStaff(":build/Desktop_Qt_6_8_0_MinGW_64_bit-Debug/debug/images/Personnage.png", i, x, y, 0.5); // Échelle à 50%
+    // Vérifier si la simulation est déjà en cours
+    if (isSimulationRunning) {
+        qDebug() << "Simulation déjà en cours. Veuillez mettre en pause avant de relancer.";
+        return;
     }
 
+    isSimulationRunning = true; // Marquer la simulation comme active
 
-    // Démarrer l'animation du cuisinier
-    startChefAnimation(ui->CuisineGraphicsView);  // Appeler la méthode spécifique
-    startChefpatisserie(ui->CuisineGraphicsView);
-    startplongeur(ui->CuisineGraphicsView);
-    startchefpartie(ui->CuisineGraphicsView);
-    // Connecter le timer pour animer les personnages
-    connect(simulationTimer, &QTimer::timeout, this, [=]() {
-        for (int i = 0; i < 5; ++i) {
-            int dx = QRandomGenerator::global()->bounded(-10, 10); // Déplacement horizontal aléatoire
-            int dy = QRandomGenerator::global()->bounded(-10, 10); // Déplacement vertical aléatoire
-            staffController->moveStaff(i, dx, dy);
-        }
-    });
+    // Ajouter des clients uniquement si la simulation n'a pas déjà démarré
+    if (!simulationStarted) {
+        // Démarrer l'animation des cuisiniers
+        startChefAnimation(ui->CuisineGraphicsView);
+        startChefpatisserie(ui->CuisineGraphicsView);
+        startplongeur(ui->CuisineGraphicsView);
+        startchefpartie(ui->CuisineGraphicsView);
+        startcommis1(ui->CuisineGraphicsView);
+        startcommis2(ui->CuisineGraphicsView);
 
-    simulationTimer->start(100); // Mise à jour toutes les 100 ms
+        // Ajouter un client
+        Client *newClient = clientController->addClient(1, 500, 100);
+
+        // Utiliser un QTimer pour introduire un délai avant l'affichage du QMessageBox
+        QTimer::singleShot(1000, this, [this, newClient]() {
+            QMessageBox::information(this, "Maitre d'hôtel", roomMasterController->getRoomMaster().askGroupSize());
+
+            // Utiliser un autre QTimer pour introduire un délai entre les actions suivantes
+            QTimer::singleShot(1500, this, [this, newClient]() {
+                clientController->assignTableToClient(newClient);
+                clientController->moveClientToAssignedTable(1);
+
+                // Création et utilisation de OrderController
+                OrderController orderController(db);
+                QList<QString> menuItems = orderController.getMenuItems();
+                for (const QString &item : menuItems) {
+                    qDebug() << "Menu Item: " << item;
+                }
+
+                // Passer une commande pour le client
+                orderController.placeOrderForClient(newClient->getId());
+
+                qDebug() << "Clients ajoutés, table assignée, et commande passée.";
+            });
+        });
+
+        simulationStarted = true; // Marquer la simulation comme commencée
+    }
+
+    // Démarrer les timers si ce n'est pas déjà fait
+    if (!timer->isActive()) {
+        timer->start(1000); // Mise à jour chaque seconde
+    }
+
+    if (!simulationTimer->isActive()) {
+        simulationTimer->start(100); // Mise à jour toutes les 100 ms
+    }
+
     qDebug() << "Simulation démarrée.";
 }
-
-// void MainWindow::start_simulation() {
-//     // Création des chefs
-//     ChefDePatisserie *chefPatisserie = new ChefDePatisserie("Chef Pâtisserie");
-//     ChefDeCuisine *chefCuisine = new ChefDeCuisine("Chef Cuisine");
-
-//     // Préparer les desserts avant l'ouverture
-//     chefPatisserie->addDessertToPrepare("Tarte aux pommes");
-//     chefPatisserie->addDessertToPrepare("Mousse au chocolat");
-//     chefPatisserie->prepareDessertsBeforeOpening();
-
-//     // Simuler la réception des commandes
-//     chefCuisine->receiveOrder("Table 1", "Filet de boeuf");
-//     chefCuisine->receiveOrder("Table 1", "Soupe du jour");
-//     chefCuisine->receiveOrder("Table 2", "Filet de boeuf");
-
-//     // Processus des commandes
-//     chefCuisine->processOrders();
-//     chefCuisine->assignTasksToChefs();
-// }
-
-// void MainWindow::start_simulation() {
-//     // Création des chefs
-//     ChefDePatisserie *chefPatisserie = new ChefDePatisserie("Chef Pâtisserie");
-//     ChefDeCuisine *chefCuisine = new ChefDeCuisine("Chef Cuisine");
-
-//     // Ajouter graphiquement les chefs à la scène
-//     QGraphicsPixmapItem *chefPatisserieItem = kitchenController->addCharacter(
-//         ":build/Desktop_Qt_6_8_0_MinGW_64_bit-Debug/debug/images/chef_patisserie.png", 50, 50);
-//     QGraphicsPixmapItem *chefCuisineItem = kitchenController->addCharacter(
-//         ":build/Desktop_Qt_6_8_0_MinGW_64_bit-Debug/debug/images/chef_cuisine.png", 50, 50);
-
-//     // Définir les positions pour représenter leurs déplacements
-//     QVector<QPoint> patisseriePositions = {
-//                                            QPoint(100, 100), QPoint(300, 100), QPoint(300, 200), QPoint(100, 200)};
-//     QVector<QPoint> cuisinePositions = {
-//                                         QPoint(200, 100), QPoint(400, 100), QPoint(400, 200), QPoint(200, 200)};
-
-//     int patisserieIndex = 0; // Position actuelle du chef pâtissier
-//     int cuisineIndex = 0;    // Position actuelle du chef de cuisine
-
-//     // Ajouter des desserts au chef pâtissier
-//     chefPatisserie->addDessertToPrepare("Tarte aux pommes");
-//     chefPatisserie->addDessertToPrepare("Mousse au chocolat");
-
-//     // Préparer les desserts
-//     chefPatisserie->prepareDessertsBeforeOpening();
-
-//     // Simuler la réception des commandes pour le chef de cuisine
-//     chefCuisine->receiveOrder("Table 1", "Filet de boeuf");
-//     chefCuisine->receiveOrder("Table 1", "Soupe du jour");
-//     chefCuisine->receiveOrder("Table 2", "Filet de boeuf");
-
-//     // Animer les chefs avec un timer
-//     QTimer *animationTimer = new QTimer(this);
-
-//     connect(animationTimer, &QTimer::timeout, this, [=, &patisserieIndex, &cuisineIndex]() mutable {
-//         // Déplacer le chef pâtissier
-//         chefPatisserieItem->setPos(patisseriePositions[patisserieIndex]);
-//         qDebug() << chefPatisserie->getName() << "travaille sur" << chefPatisserie->getNextDessert();
-//         patisserieIndex = (patisserieIndex + 1) % patisseriePositions.size();
-
-//         // Déplacer le chef de cuisine
-//         chefCuisineItem->setPos(cuisinePositions[cuisineIndex]);
-//         chefCuisine->processOrders(); // Traite les commandes en mouvement
-//         cuisineIndex = (cuisineIndex + 1) % cuisinePositions.size();
-
-//         qDebug() << chefCuisine->getName() << "travaille sur une commande.";
-//     });
-
-//     animationTimer->start(1000); // Met à jour toutes les secondes
-
-//     qDebug() << "Simulation démarrée avec des chefs instanciés et animés.";
-// }
-
-// void MainWindow::start_simulation() {
-//     // Création des chefs
-//     ChefDePatisserie *chefPatisserie = new ChefDePatisserie("Chef Pâtisserie");
-//     ChefDeCuisine *chefCuisine = new ChefDeCuisine("Chef Cuisine");
-
-//     // Ajouter graphiquement les chefs à la scène
-//     QGraphicsPixmapItem *chefPatisserieItem = kitchenController->addCharacter(
-//         ":build/Desktop_Qt_6_8_0_MinGW_64_bit-Debug/debug/images/chef_patisserie.png", 50, 50);
-//     QGraphicsPixmapItem *chefCuisineItem = kitchenController->addCharacter(
-//         ":build/Desktop_Qt_6_8_0_MinGW_64_bit-Debug/debug/images/chef_cuisine.png", 50, 50);
-
-
-//     // Définir les positions pour représenter leurs déplacements
-//     QVector<QPoint> patisseriePositions = {
-//                                            QPoint(100, 100), QPoint(300, 100), QPoint(300, 200), QPoint(100, 200)};
-//     QVector<QPoint> cuisinePositions = {
-//                                         QPoint(20, 180), QPoint(400, 100), QPoint(400, 200), QPoint(200, 200)};
-
-//     int patisserieIndex = 0; // Position actuelle du chef pâtissier
-//     int cuisineIndex = 0;    // Position actuelle du chef de cuisine
-
-//     // Ajouter des desserts au chef pâtissier
-//     chefPatisserie->addDessertToPrepare("Tarte aux pommes");
-//     chefPatisserie->addDessertToPrepare("Mousse au chocolat");
-
-//     // Préparer les desserts
-//     chefPatisserie->prepareDessertsBeforeOpening();
-
-//     // Simuler la réception des commandes pour le chef de cuisine
-//     chefCuisine->receiveOrder("Table 1", "Filet de boeuf");
-//     chefCuisine->receiveOrder("Table 1", "Soupe du jour");
-//     chefCuisine->receiveOrder("Table 2", "Filet de boeuf");
-
-//     // Animer les chefs avec un timer
-//     QTimer *animationTimer = new QTimer(this);
-
-//     connect(animationTimer, &QTimer::timeout, this, [=, &patisserieIndex, &cuisineIndex]() mutable {
-//         // Déplacer le chef pâtissier
-//         qDebug() << "Patisserie Index:" << patisserieIndex;
-//         qDebug() << "Chef Pâtisserie Position:" << patisseriePositions[patisserieIndex];
-//         chefPatisserieItem->setVisible(false); // Rendre le chef invisible avant de le déplacer
-//         QTimer::singleShot(500, [=]() {
-//             chefPatisserieItem->setPos(patisseriePositions[patisserieIndex]);
-//             chefPatisserieItem->setVisible(true); // Rendre le chef visible après déplacement
-//         });
-//         patisserieIndex = (patisserieIndex + 1) % patisseriePositions.size();
-
-//         // Déplacer le chef de cuisine
-//         qDebug() << "Cuisine Index:" << cuisineIndex;
-//         qDebug() << "Chef Cuisine Position:" << cuisinePositions[cuisineIndex];
-//         chefCuisineItem->setVisible(false); // Rendre le chef invisible avant de le déplacer
-//         QTimer::singleShot(500, [=]() {
-//             chefCuisineItem->setPos(cuisinePositions[cuisineIndex]);
-//             chefCuisineItem->setVisible(true); // Rendre le chef visible après déplacement
-//         });
-//         cuisineIndex = (cuisineIndex + 1) % cuisinePositions.size();
-
-//         // Traiter les commandes
-//         chefCuisine->processOrders();
-//         qDebug() << chefCuisine->getName() << "travaille sur une commande.";
-//         qDebug() << chefPatisserie->getName() << "travaille sur" << chefPatisserie->getNextDessert();
-//     });
-
-//     animationTimer->start(1000); // Met à jour toutes les secondes
-
-//     qDebug() << "Simulation démarrée avec des chefs instanciés et animés.";
-// }

@@ -12,34 +12,55 @@ parquet.qrc
 
 
 SOURCES += \
-    Staff.cpp \
-    StaffController.cpp \
+    # Staff.cpp \
+    # StaffController.cpp \
     Table.cpp \
-    TableController.cpp \
     chefdecuisine.cpp \
     chefdepartie.cpp \
     chefdepatisserie.cpp \
+    commis1.cpp \
+    commis2.cpp \
     human.cpp \
     kitchencontroller.cpp \
     main.cpp \
     mainwindow.cpp \
-    plongeur.cpp
+    plongeur.cpp \
+    Client.cpp \
+        ClientController.cpp \
+        OrderController.cpp \
+        RoomMaster.cpp \
+        RoomMasterController.cpp \
+        # Staff.cpp \
+        # StaffController.cpp \
+        TableController.cpp \
+         viewwindow.cpp
 
 HEADERS += \
-    Staff.h \
-    StaffController.h \
+    # Staff.h \
+    # StaffController.h \
     Table.h \
-    TableController.h \
     chefdecuisine.h \
     chefdepartie.h \
     chefdepatisserie.h \
+    commis1.h \
+    commis2.h \
     human.h \
     kitchencontroller.h \
     mainwindow.h \
-    plongeur.h
+    plongeur.h \
+    Client.h \
+        ClientController.h \
+        OrderController.h \
+        RoomMaster.h \
+        RoomMasterController.h \
+        # Staff.h \
+        # StaffController.h \
+        TableController.h \
+        viewwindow.h
 
 FORMS += \
-    mainwindow.ui
+    mainwindow.ui \
+    viewwindow.ui
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin
